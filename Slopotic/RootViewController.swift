@@ -8,12 +8,30 @@
 
 import UIKit
 
-class RootViewController: UIViewController {
+class RootViewController: UITabBarController {
+    let homeVC = HomeViewController()
+    let playVC = PlayViewController()
+    let sleepVC = SleepViewController()
+    let mineVC = MineViewController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        tabBar.backgroundColor = UIColor.systemBackground
+
+        homeVC.tabBarItem.title = "Home"
+        homeVC.tabBarItem.image = UIImage(systemName: "doc.text.image.fill")
+
+        playVC.tabBarItem.title = "Play"
+        playVC.tabBarItem.image = UIImage(systemName: "play.fill")
+
+        sleepVC.tabBarItem.title = "Sleep"
+        sleepVC.tabBarItem.image = UIImage(systemName: "powersleep")
+
+        mineVC.tabBarItem.title = "Me"
+        mineVC.tabBarItem.image = UIImage(systemName: "person.crop.circle.fill")
+
+        viewControllers = [homeVC, playVC, sleepVC, mineVC]
     }
 
 }
