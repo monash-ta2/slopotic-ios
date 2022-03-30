@@ -1,0 +1,16 @@
+name: Slopotic
+
+options:
+  bundleIdPrefix: com.doubleflash
+attributes:
+  ORGANIZATIONNAME: "Double Flash"
+
+targets:
+  Slopotic:
+    type: application
+    platform: iOS
+    deploymentTarget: "15.0"
+    settings:
+      TARGETED_DEVICE_FAMILY: 1
+    sources: 
+      - Slopotic
