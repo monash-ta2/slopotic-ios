@@ -70,7 +70,7 @@ extension PlayViewController: UICollectionViewDataSource, UICollectionViewDelega
         let isSpotifyInstalled = UIApplication.shared.canOpenURL(URL(string: "spotify:")!)
         guard isSpotifyInstalled else {
             let alert = UIAlertController(title: "Spotify Not Installed", message: "You haven't installed Spotify in this device.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Install Now", style: .default, handler: { _ in
+            alert.addAction(UIAlertAction(title: "Install Now", style: .cancel, handler: { _ in
                 let storeVC = SKStoreProductViewController()
                 storeVC.loadProduct(withParameters: [SKStoreProductParameterITunesItemIdentifier : "324684580"]) { result, error in
                     if !result {
