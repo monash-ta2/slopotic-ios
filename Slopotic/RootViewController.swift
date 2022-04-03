@@ -31,7 +31,12 @@ class RootViewController: UITabBarController {
         mineVC.tabBarItem.title = "Me"
         mineVC.tabBarItem.image = UIImage(systemName: "person.crop.circle.fill")
 
-        viewControllers = [homeVC, UINavigationController(rootViewController: playVC), sleepVC, mineVC]
+        viewControllers = [
+            UINavigationController(rootViewController: homeVC),
+            UINavigationController(rootViewController: playVC),
+            UINavigationController(rootViewController: sleepVC),
+            UINavigationController(rootViewController: mineVC)
+        ]
     }
 
 }
