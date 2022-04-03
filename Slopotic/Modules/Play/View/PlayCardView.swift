@@ -10,9 +10,9 @@ import UIKit
 import SnapKit
 
 class PlayCardView: UICollectionViewCell {
-    let cardHeight = 112
-    let horizontalPadding = 16
-    let verticalPadding = 12
+    let cardHeight: CGFloat = 112
+    let horizontalPadding: CGFloat = 16
+    let verticalPadding: CGFloat = 12
 
     lazy var image = UIImageView()
     lazy var title = UILabel()
@@ -30,8 +30,15 @@ class PlayCardView: UICollectionViewCell {
     }
 
     func setup() {
+        image.contentMode = .scaleAspectFill
         contentView.addSubview(image)
+
+        title.font = .systemFont(ofSize: 20, weight: .semibold)
+        title.textColor = .white
         contentView.addSubview(title)
+
+        contentView.layer.cornerRadius = 16
+        contentView.clipsToBounds = true
     }
     
     func layout() {
@@ -47,10 +54,13 @@ class PlayCardView: UICollectionViewCell {
         
         contentView.snp.makeConstraints { make in
             make.height.equalTo(cardHeight)
-            make.left.equalToSuperview().offset(horizontalPadding)
-            make.right.equalToSuperview().offset(-horizontalPadding)
-            make.top.equalToSuperview().offset(verticalPadding)
-            make.bottom.equalToSuperview().offset(-verticalPadding)
+            make.width.equalTo(UIScreen.main.bounds.size.width - CGFloat(horizontalPadding * 2))
+            make.center.equalToSuperview()
         }
+    }
+
+    func update(_ model: PlaylistModel) {
+        title.text = model.title
+        image.image = model.image
     }
 }
