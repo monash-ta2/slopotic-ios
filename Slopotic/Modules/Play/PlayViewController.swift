@@ -15,11 +15,17 @@ class PlayViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        title = "Play"
+        navigationController?.navigationBar.prefersLargeTitles = true
+
+        configUI()
+    }
+
+    func configUI() {
         view.addSubview(contentView)
         contentView.snp.makeConstraints { make in
             make.size.equalToSuperview()
         }
         contentView.collectionView.register(PlayCardView.self, forCellWithReuseIdentifier: "playCard")
     }
-
 }
