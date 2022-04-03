@@ -8,6 +8,7 @@
 
 import SnapKit
 import UIKit
+import StoreKit
 
 class PlayViewController: UIViewController {
     let data = [
@@ -70,7 +71,14 @@ extension PlayViewController: UICollectionViewDataSource, UICollectionViewDelega
         guard isSpotifyInstalled else {
             let alert = UIAlertController(title: "Spotify Not Installed", message: "You haven't installed Spotify in this device.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Install Now", style: .default, handler: { _ in
-                UIApplication.shared.open(URL(string: "https://itunes.apple.com/app/spotify-music/id324684580?mt=8")!)
+                let storeVC = SKStoreProductViewController()
+                storeVC.loadProduct(withParameters: [SKStoreProductParameterITunesItemIdentifier : "324684580"]) { result, error in
+                    if !result {
+                        print(error.debugDescription)
+                        UIApplication.shared.open(URL(string: "https://itunes.apple.com/app/spotify-music/id324684580?mt=8")!)
+                    }
+                }
+                self.present(storeVC, animated: true)
             }))
             alert.addAction(UIAlertAction(title: "Later", style: .default))
             present(alert, animated: true)
