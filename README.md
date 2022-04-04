@@ -13,3 +13,9 @@ $ xcodegen
 # Install CocoaPods dependencies and generate .xcworkspace file.
 $ pod install
 ```
+
+[Check documents for more information.](https://weiyi-kong.gitbook.io/slopotic/)
+
+## Test
+
+Check section [For Testers](https://weiyi-kong.gitbook.io/slopotic/for-testers) from documents.
