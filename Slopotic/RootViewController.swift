@@ -12,7 +12,10 @@ class RootViewController: UITabBarController {
     let homeVC = HomeViewController()
     let playVC = PlayViewController()
     let sleepVC = SleepViewController()
-    let mineVC = MineViewController()
+    let mineVC: MineTableViewController = {
+        let storyboard = UIStoryboard(name: "MineTableViewController", bundle: nil)
+        return storyboard.instantiateViewController(withIdentifier: "MineTableViewController") as! MineTableViewController
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
