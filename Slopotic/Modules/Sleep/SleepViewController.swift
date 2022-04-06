@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SnapKit
 
 class SleepViewController: UIViewController {
     lazy var contentView = SleepView()
@@ -18,6 +19,25 @@ class SleepViewController: UIViewController {
         return rater
     }()
     lazy var sleepQuality = SleepRaterCell.Choice.good
+    lazy var tabletCell = TabletTakenCell()
+
+    lazy var saveButton: UITableViewCell = {
+        let button = UITableViewCell()
+        button.backgroundColor = .link
+        button.selectionStyle = .gray
+
+        let label = UILabel()
+        label.text = "Save"
+        label.textColor = .white
+        label.font = .preferredFont(forTextStyle: .body, compatibleWith: UITraitCollection(legibilityWeight: .bold))
+        button.addSubview(label)
+
+        label.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+
+        return button
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,22 +73,18 @@ class SleepViewController: UIViewController {
     }
 }
 
-//extension SleepViewController: UIScrollViewDelegate {
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        if isViewAppeared, navigationController!.navigationBar.showsLargeContentViewer, scrollView.contentOffset.y < 0 {
-//            scrollView.contentOffset.y = 0
-//        }
-//    }
-//}
+extension SleepViewController: SleepRaterCellDelegate {
+    func sleepRaterCell(didChoose choice: SleepRaterCell.Choice) {
+        sleepQuality = choice
+    }
+}
 
 extension SleepViewController: UITableViewDataSource, UITableViewDelegate {
-    func numberOfSections(in tableView: UITableView) -> Int { 2 }
+    func numberOfSections(in tableView: UITableView) -> Int { 3 }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
-        case 0:
-            return 1
-        case 1:
+        case 0, 1, 2:
             return 1
         default:
             return 0
@@ -79,6 +95,10 @@ extension SleepViewController: UITableViewDataSource, UITableViewDelegate {
         switch indexPath.section {
         case 0:
             return raterCell
+        case 1:
+            return tabletCell
+        case 2:
+            return saveButton
         default:
             return UITableViewCell()
         }
@@ -105,10 +125,8 @@ extension SleepViewController: UITableViewDataSource, UITableViewDelegate {
             return nil
         }
     }
-}
 
-extension SleepViewController: SleepRaterCellDelegate {
-    func sleepRaterCell(didChoose choice: SleepRaterCell.Choice) {
-        sleepQuality = choice
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: false)
     }
 }
