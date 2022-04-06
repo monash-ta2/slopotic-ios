@@ -6,5 +6,6 @@ target 'Slopotic' do
 
   # Pods for Slopotic
   pod 'SnapKit', '~> 5.0.0'
+  pod 'MKRingProgressView'
 
 end

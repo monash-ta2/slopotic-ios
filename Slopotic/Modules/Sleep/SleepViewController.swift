@@ -9,22 +9,24 @@
 import UIKit
 
 class SleepViewController: UIViewController {
+    lazy var contentView = SleepView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .white
+        title = "Sleep"
+        view.backgroundColor = .systemGroupedBackground
+        navigationController?.navigationBar.prefersLargeTitles = true
+
+        configUI()
     }
-    
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    func configUI() {
+        view.addSubview(contentView)
+        contentView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            make.left.right.equalToSuperview()
+        }
     }
-    */
-
 }
