@@ -1,20 +1,28 @@
 PODS:
+  - GestureRecognizerClosures (5.0.0)
   - MKRingProgressView (2.3.0)
+  - Smile (2.0.0)
   - SnapKit (5.0.1)
 
 DEPENDENCIES:
+  - GestureRecognizerClosures (~> 5)
   - MKRingProgressView
+  - Smile
   - SnapKit (~> 5.0.0)
 
 SPEC REPOS:
   trunk:
+    - GestureRecognizerClosures
     - MKRingProgressView
+    - Smile
     - SnapKit
 
 SPEC CHECKSUMS:
+  GestureRecognizerClosures: 0dcafb45e669e7a775c840383e54b3d16983037b
   MKRingProgressView: f534209b9a1edc0beb2ea613e6b953ea2195b565
+  Smile: 21ff6c48e06ecfcee605cca32aedd74d5810e34a
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
 
-PODFILE CHECKSUM: 30283e3aea70c98272d76fd6bce1ac0ea2c6a850
+PODFILE CHECKSUM: 2aef52ed86c4e6f6a0f27479e4ff2d39f442b645
 
 COCOAPODS: 1.11.3

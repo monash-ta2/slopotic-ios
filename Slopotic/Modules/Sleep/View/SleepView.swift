@@ -10,7 +10,7 @@ import UIKit
 
 class SleepView: UIView {
     lazy var weeklyView = WeeklyRingView()
-    lazy var tableView = UITableView()
+    lazy var tableView = UITableView(frame: .zero, style: .insetGrouped)
     lazy var weeklySeparator = UIView()
 
     override init(frame: CGRect) {
