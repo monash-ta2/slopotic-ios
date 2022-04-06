@@ -18,6 +18,7 @@ class SleepViewController: UIViewController {
         view.backgroundColor = .systemGroupedBackground
         navigationController?.navigationBar.prefersLargeTitles = true
 
+        preventLargeTitleCollapsing()
         configUI()
     }
 
