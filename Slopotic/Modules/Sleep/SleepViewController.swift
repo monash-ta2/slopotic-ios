@@ -76,11 +76,8 @@ class SleepViewController: UIViewController {
     func setupButton() {
         saveButton.onTap { [weak self] _ in
             self?.saveButton.setSelected(true, animated: false)
-            let formatter = DateFormatter()
-            formatter.dateFormat = "MM/dd/YYYY"
-            let date = formatter.date(from: Date.now.formatted(date: .numeric, time: .omitted))
             let countOfTablets = Double(self!.tablets) ?? 0
-            let sleepRecord = DailySleepRecord(date: date!, quality: self!.sleepQuality, tablets: countOfTablets)
+            let sleepRecord = DailySleepRecord(date: Date.today, quality: self!.sleepQuality, tablets: countOfTablets)
 
             DBManager.shared.insertOrUpdateSleep(record: sleepRecord)
             self?.saveButton.setSelected(false, animated: false)
