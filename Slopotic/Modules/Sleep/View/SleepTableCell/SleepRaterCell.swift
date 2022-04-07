@@ -21,8 +21,8 @@ class SleepRaterCell: UITableViewCell {
         case right
     }
 
-    lazy var badColor = UIColor.systemOrange
-    lazy var goodColor = UIColor.systemIndigo
+    lazy var badColor = UIColor.systemIndigo
+    lazy var goodColor = UIColor.systemOrange
     lazy var unselectedColor = UIColor.systemGray3
 
     lazy var badChoice = setupChoice(backgroundColor: unselectedColor, emoji: "persevere", text: "Bad", position: .left)
