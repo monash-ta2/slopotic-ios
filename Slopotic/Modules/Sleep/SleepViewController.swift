@@ -54,7 +54,7 @@ class SleepViewController: UIViewController {
 
         preventLargeTitleCollapsing()
         configUI()
-        setupButton()
+        setupSaveButton()
     }
 
     func configUI() {
@@ -73,21 +73,20 @@ class SleepViewController: UIViewController {
         contentView.tableView.dataSource = self
     }
 
-    func setupButton() {
+    func configTextField() {
+        tabletCell.input.delegate = self
+    }
+
+    func setupSaveButton() {
         saveButton.onTap { [weak self] _ in
             self?.saveButton.setSelected(true, animated: false)
             let countOfTablets = Double(self!.tablets) ?? 0
             let sleepRecord = DailySleepRecord(date: Date.now, quality: self!.sleepQuality, tablets: countOfTablets)
-
             DBManager.shared.insertOrUpdateSleep(record: sleepRecord)
             self?.saveButton.setSelected(false, animated: false)
+
+            self?.contentView.weeklyView.update(today: sleepRecord)
         }
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-        isViewAppeared = true
     }
 }
 
@@ -95,6 +94,9 @@ extension SleepViewController: SleepRaterCellDelegate {
     func sleepRaterCell(didChoose choice: SleepRaterCell.Choice) {
         sleepQuality = choice.rawValue
     }
+}
+
+extension SleepViewController: UITextFieldDelegate {
 }
 
 extension SleepViewController: UITableViewDataSource, UITableViewDelegate {

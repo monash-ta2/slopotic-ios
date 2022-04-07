@@ -24,8 +24,8 @@ class DailyRingView: UIView {
     }
     
     func setup() {
-        ringView.innerRing.progress = 0.5
-        ringView.outerRing.progress = 1.0
+        ringView.innerRing.progress = 0
+        ringView.outerRing.progress = 0
         ringView.ringWidth = 6
         ringView.ringSpacing = 1
         addSubview(ringView)
@@ -46,5 +46,18 @@ class DailyRingView: UIView {
             make.centerX.equalToSuperview()
             make.bottom.equalToSuperview()
         }
+    }
+
+    func update(model: DailySleepRecord) {
+        switch model.quality {
+        case 0:
+            ringView.outerRing.progress = 0.375
+        case 1:
+            ringView.outerRing.progress = 1
+        default:
+            ringView.outerRing.progress = 0
+        }
+        ringView.innerRing.progress = model.tablets / 20
+        dayOfWeek.text = model.date.dayOfWeek()
     }
 }
