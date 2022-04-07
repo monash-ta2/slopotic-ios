@@ -51,13 +51,13 @@ class DailyRingView: UIView {
     func update(model: DailySleepRecord) {
         switch model.quality {
         case 0:
-            ringView.outerRing.progress = 0.375
+            ringView.outerRing.progress = 0.3
         case 1:
             ringView.outerRing.progress = 1
         default:
             ringView.outerRing.progress = 0
         }
-        ringView.innerRing.progress = model.tablets / 20
+        ringView.innerRing.progress = model.tablets / 5
         dayOfWeek.text = model.date.dayOfWeek()
     }
 }
