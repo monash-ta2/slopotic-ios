@@ -13,25 +13,25 @@ class RingView: UIView {
     let outerRing = RingProgressView()
     let innerRing = RingProgressView()
 
-    var innerStartColor: UIColor = .red {
+    var innerStartColor: UIColor = .systemGreen {
         didSet {
             innerRing.startColor = innerStartColor
         }
     }
 
-    var innerEndColor: UIColor = .blue {
+    var innerEndColor: UIColor = .systemPurple {
         didSet {
             innerRing.endColor = innerEndColor
         }
     }
 
-    var outerStartColor: UIColor = .red {
+    var outerStartColor: UIColor = .systemPurple {
         didSet {
             outerRing.startColor = outerStartColor
         }
     }
 
-    var outerEndColor: UIColor = .blue {
+    var outerEndColor: UIColor = .systemOrange {
         didSet {
             outerRing.endColor = outerEndColor
         }
@@ -62,7 +62,12 @@ class RingView: UIView {
     }
 
     func setup() {
+        outerRing.startColor = outerStartColor
+        outerRing.endColor = outerEndColor
         addSubview(outerRing)
+
+        innerRing.startColor = innerStartColor
+        innerRing.endColor = innerEndColor
         addSubview(innerRing)
     }
 

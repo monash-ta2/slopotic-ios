@@ -9,5 +9,6 @@ target 'Slopotic' do
   pod 'MKRingProgressView'
   pod 'Smile'
   pod 'GestureRecognizerClosures', '~> 5'
+  pod 'GRDB.swift'
 
 end

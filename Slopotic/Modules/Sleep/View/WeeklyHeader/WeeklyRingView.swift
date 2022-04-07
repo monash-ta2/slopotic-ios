@@ -24,7 +24,8 @@ class WeeklyRingView: UIStackView {
     }
 
     func setup() {
-        for daily in dailyViews {
+        for (index, daily) in dailyViews.enumerated() {
+            daily.dayOfWeek.text = Date.now.addingTimeInterval(TimeInterval(-86400 * index)).dayOfWeek()
             addArrangedSubview(daily)
         }
 
@@ -41,6 +42,17 @@ class WeeklyRingView: UIStackView {
                 make.width.equalTo(40)
                 make.height.equalTo(64)
             }
+        }
+    }
+
+    func update(today model: DailySleepRecord) {
+        dailyViews[6].update(model: model)
+    }
+
+    func update(latestEarlist models: [DailySleepRecord]) {
+        for (index, model) in  models.enumerated() {
+            if index > 6 { return }
+            dailyViews[6 - index].update(model: model)
         }
     }
 }
