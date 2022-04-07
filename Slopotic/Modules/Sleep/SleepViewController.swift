@@ -77,7 +77,7 @@ class SleepViewController: UIViewController {
         saveButton.onTap { [weak self] _ in
             self?.saveButton.setSelected(true, animated: false)
             let countOfTablets = Double(self!.tablets) ?? 0
-            let sleepRecord = DailySleepRecord(date: Date.today, quality: self!.sleepQuality, tablets: countOfTablets)
+            let sleepRecord = DailySleepRecord(date: Date.now, quality: self!.sleepQuality, tablets: countOfTablets)
 
             DBManager.shared.insertOrUpdateSleep(record: sleepRecord)
             self?.saveButton.setSelected(false, animated: false)

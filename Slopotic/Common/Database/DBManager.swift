@@ -14,6 +14,19 @@ class DBManager {
     let dbPath = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!)/db.sqlite3"
     lazy var dbQueue = try! DatabaseQueue(path: self.dbPath)
 
+    private lazy var gmtFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd/yyyy"
+        formatter.timeZone = .init(secondsFromGMT: 0)
+        return formatter
+    }()
+
+    private lazy var localFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd/yyyy"
+        return formatter
+    }()
+
     func setupSleep() {
         do {
             try dbQueue.write({ db in
@@ -28,13 +41,23 @@ class DBManager {
         }
     }
 
+    private func removeDateTimeAndTimezone(original date: Date) -> Date {
+        return gmtFormatter.date(from: date.formatted(date: .numeric, time: .omitted))!
+    }
+
+    private func recoverDateTimeAndTimezone(converted date: Date) -> Date {
+        return localFormatter.date(from: gmtFormatter.string(from: date))!
+    }
+
     func insertOrUpdateSleep(record model: DailySleepRecord) {
+        var convertedModel = model
+        convertedModel.date = removeDateTimeAndTimezone(original: model.date)
         do {
             try dbQueue.write({ db in
-                if try model.exists(db) {
-                    try model.update(db)
+                if try convertedModel.exists(db) {
+                    try convertedModel.update(db)
                 } else {
-                    try model.insert(db)
+                    try convertedModel.insert(db)
                 }
             })
         } catch {
@@ -43,9 +66,11 @@ class DBManager {
     }
 
     func insertSleep(record model: DailySleepRecord) {
+        var convertedModel = model
+        convertedModel.date = removeDateTimeAndTimezone(original: model.date)
         do {
             try dbQueue.write({ db in
-                try model.insert(db)
+                try convertedModel.insert(db)
             })
         } catch {
             print(error)
@@ -53,9 +78,11 @@ class DBManager {
     }
 
     func updateSleep(record model: DailySleepRecord) {
+        var convertedModel = model
+        convertedModel.date = removeDateTimeAndTimezone(original: model.date)
         do {
             try dbQueue.write({ db in
-                try model.update(db)
+                try convertedModel.update(db)
             })
         } catch {
             print(error)
@@ -63,24 +90,28 @@ class DBManager {
     }
 
     func deleteSleep(record model: DailySleepRecord) {
+        var convertedModel = model
+        convertedModel.date = removeDateTimeAndTimezone(original: model.date)
         do {
             try dbQueue.write({ db in
-                try model.delete(db)
+                try convertedModel.delete(db)
             })
         } catch {
             print(error)
         }
     }
 
-    func selectSleep(date: Data) -> DailySleepRecord? {
+    func selectSleep(date: Date) -> DailySleepRecord? {
+        var record: DailySleepRecord? = nil
         do {
             try dbQueue.read({ db in
-                return try DailySleepRecord.fetchOne(db, key: date)
+                record = try DailySleepRecord.fetchOne(db, key: removeDateTimeAndTimezone(original: date))
+                record?.date = recoverDateTimeAndTimezone(converted: date)
             })
         } catch {
             print(error)
         }
-        return nil
+        return record
     }
 
 //    func selectRecentSleep() -> [DailySleepRecord?] {
