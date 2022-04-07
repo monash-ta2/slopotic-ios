@@ -20,10 +20,11 @@ class SleepViewController: UIViewController {
     }()
     lazy var sleepQuality = SleepRaterCell.Choice.good.rawValue
 
+    lazy var isTabletEnabled = UserDefaults.standard.bool(forKey: "enableSupplement")
     lazy var tabletCell = TabletTakenCell()
     var tablets: String {
         get {
-            tabletCell.input.text!
+            tabletCell.input.text! == "" ? "0" : tabletCell.input.text!
         }
     }
 
@@ -100,7 +101,7 @@ extension SleepViewController: UITextFieldDelegate {
 }
 
 extension SleepViewController: UITableViewDataSource, UITableViewDelegate {
-    func numberOfSections(in tableView: UITableView) -> Int { 3 }
+    func numberOfSections(in tableView: UITableView) -> Int { isTabletEnabled ? 3 : 2 }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
@@ -116,7 +117,7 @@ extension SleepViewController: UITableViewDataSource, UITableViewDelegate {
         case 0:
             return raterCell
         case 1:
-            return tabletCell
+            return isTabletEnabled ? tabletCell : saveButton
         case 2:
             return saveButton
         default:
@@ -129,7 +130,7 @@ extension SleepViewController: UITableViewDataSource, UITableViewDelegate {
         case 0:
             return "Sleep Quality"
         case 1:
-            return "Supplement Taken"
+            return isTabletEnabled ? "Supplement Taken" : nil
         default:
             return nil
         }
@@ -140,7 +141,7 @@ extension SleepViewController: UITableViewDataSource, UITableViewDelegate {
         case 0:
             return "Select your sleeping quality."
         case 1:
-            return "Maxinmum is 200."
+            return isTabletEnabled ? "Maxinmum is 200." : nil
         default:
             return nil
         }
