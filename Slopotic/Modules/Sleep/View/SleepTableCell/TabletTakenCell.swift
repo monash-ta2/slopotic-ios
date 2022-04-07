@@ -37,6 +37,7 @@ class TabletTakenCell: UITableViewCell {
         input.placeholder = "0"
         input.textAlignment = .right
         input.font = .preferredFont(forTextStyle: .body, compatibleWith: nil)
+        input.keyboardType = .decimalPad
         contentView.addSubview(input)
 
         selectionStyle = .none

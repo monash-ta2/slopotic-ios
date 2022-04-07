@@ -26,6 +26,7 @@ class SleepView: UIView {
     }
 
     func setup() {
+        tableView.keyboardDismissMode = .onDrag
         addSubview(tableView)
 
         setupWeeklyView()
