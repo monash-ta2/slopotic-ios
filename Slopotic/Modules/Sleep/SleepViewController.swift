@@ -18,8 +18,14 @@ class SleepViewController: UIViewController {
         rater.delegate = self
         return rater
     }()
-    lazy var sleepQuality = SleepRaterCell.Choice.good
+    lazy var sleepQuality = SleepRaterCell.Choice.good.rawValue
+
     lazy var tabletCell = TabletTakenCell()
+    var tablets: String {
+        get {
+            tabletCell.input.text!
+        }
+    }
 
     lazy var saveButton: UITableViewCell = {
         let button = UITableViewCell()
@@ -48,6 +54,7 @@ class SleepViewController: UIViewController {
 
         preventLargeTitleCollapsing()
         configUI()
+        setupButton()
     }
 
     func configUI() {
@@ -66,6 +73,20 @@ class SleepViewController: UIViewController {
         contentView.tableView.dataSource = self
     }
 
+    func setupButton() {
+        saveButton.onTap { [weak self] _ in
+            self?.saveButton.setSelected(true, animated: false)
+            let formatter = DateFormatter()
+            formatter.dateFormat = "MM/dd/YYYY"
+            let date = formatter.date(from: Date.now.formatted(date: .numeric, time: .omitted))
+            let countOfTablets = Double(self!.tablets) ?? 0
+            let sleepRecord = DailySleepRecord(date: date!, quality: self!.sleepQuality, tablets: countOfTablets)
+
+            DBManager.shared.insertOrUpdateSleep(record: sleepRecord)
+            self?.saveButton.setSelected(false, animated: false)
+        }
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
@@ -75,7 +96,7 @@ class SleepViewController: UIViewController {
 
 extension SleepViewController: SleepRaterCellDelegate {
     func sleepRaterCell(didChoose choice: SleepRaterCell.Choice) {
-        sleepQuality = choice
+        sleepQuality = choice.rawValue
     }
 }
 
