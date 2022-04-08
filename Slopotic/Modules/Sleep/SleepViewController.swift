@@ -24,7 +24,7 @@ class SleepViewController: UIViewController {
     lazy var tabletCell = TabletTakenCell()
     var tablets: String {
         get {
-            tabletCell.input.text! == "" ? "0" : tabletCell.input.text!
+            tabletCell.input.text!.isEmpty ? "0" : tabletCell.input.text!
         }
     }
 
@@ -82,6 +82,14 @@ class SleepViewController: UIViewController {
         saveButton.onTap { [weak self] _ in
             self?.saveButton.setSelected(true, animated: false)
             let countOfTablets = Double(self!.tablets) ?? 0
+
+            if self?.tablets.range(of: "^\\d*(\\.\\d{0,2})?$", options: .regularExpression) == nil {
+                let alert = UIAlertController(title: "Check Tablet Count", message: "Please ensure your tablet count is valid.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .cancel))
+                self?.present(alert, animated: true)
+                return
+            }
+
             let sleepRecord = DailySleepRecord(date: Date.now, quality: self!.sleepQuality, tablets: countOfTablets)
             DBManager.shared.insertOrUpdateSleep(record: sleepRecord)
             self?.saveButton.setSelected(false, animated: false)
