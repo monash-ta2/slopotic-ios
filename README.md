@@ -1,10 +1,17 @@
-# Slopotic
+# Slopotic 
 
-## Develop
+An iOS app for people suffered insomnia. 
 
-Before contributing, make sure you have [XcodeGen](https://github.com/yonaskolb/XcodeGen) and [CocoaPods](https://cocoapods.org/) installed.
+[» Check our GitBook for detailed documentation.](https://weiyi-kong.gitbook.io/slopotic/) 
 
-After each pulling or file changes, run following command to generate new `.xcodeproj` and `.xcworkspace` files.
+## Developers
+
+Before contributing, make sure you have following dependencies installed: 
+
+* [XcodeGen](https://github.com/yonaskolb/XcodeGen)
+* [CocoaPods](https://cocoapods.org/)
+
+After each pulling or file changes, execute following commands to generate new `.xcodeproj` and `.xcworkspace` files.
 
 ```bash
 # Generate .xcodeproj from project.yml config.
@@ -14,8 +21,10 @@ $ xcodegen
 $ pod install
 ```
 
-[Check documents for more information.](https://weiyi-kong.gitbook.io/slopotic/)
+[» Check our GitBook documentation for detailed instructions.](https://weiyi-kong.gitbook.io/slopotic/)
 
-## Test
+## Testers
 
-Check section [For Testers](https://weiyi-kong.gitbook.io/slopotic/for-testers) from documents.
+Due to having no paid developer membership, you have to sideload to deply our app to your devices.
+
+[» For more information about sideload, check Testers section from GitBook.](https://weiyi-kong.gitbook.io/slopotic/testing/installation)
