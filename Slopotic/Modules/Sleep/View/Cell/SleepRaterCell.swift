@@ -61,7 +61,7 @@ class SleepRaterCell: UITableViewCell {
         choice.backgroundColor = backgroundColor
 
         let emojiLabel = UILabel()
-        emojiLabel.font = .preferredFont(forTextStyle: .body, compatibleWith: nil)
+        emojiLabel.font = .systemFont(ofSize: 20)
         emojiLabel.text = Smile.emoji(alias: emoji)
         choice.addSubview(emojiLabel)
         emojiLabel.snp.makeConstraints { make in
@@ -75,7 +75,7 @@ class SleepRaterCell: UITableViewCell {
         }
 
         let textLabel = UILabel()
-        textLabel.font = .preferredFont(forTextStyle: .body, compatibleWith: nil)
+        textLabel.font = .systemFont(ofSize: 17, weight: .semibold)
         textLabel.text = text
         textLabel.textColor = .white
         choice.addSubview(textLabel)

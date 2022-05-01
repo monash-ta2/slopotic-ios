@@ -11,21 +11,30 @@ import SnapKit
 
 class SleepViewController: UIViewController {
     lazy var contentView = SleepView()
-    lazy var isViewAppeared = false
 
     lazy var raterCell: SleepRaterCell = {
         let rater = SleepRaterCell()
         rater.delegate = self
         return rater
     }()
-    lazy var sleepQuality = SleepRaterCell.Choice.good.rawValue
+    lazy var quality = SleepRaterCell.Choice.good.rawValue
 
-    lazy var isTabletEnabled = UserDefaults.standard.bool(forKey: "enableSupplement")
-    lazy var tabletCell = TabletTakenCell()
-    var tablets: String {
+    lazy var hoursCell: InputCell = {
+        let cell = InputCell()
+        cell.title.text = "Sleep Hours"
+        return cell
+    }()
+    var hours: String {
         get {
-            tabletCell.input.text!.isEmpty ? "0" : tabletCell.input.text!
+            hoursCell.input.text ?? "0"
         }
+    }
+
+    lazy var habits = ["Read a Book", "Watch TV", "Adjust Heat", "Use Social Media", "Take a Warm Bath"]
+    lazy var habitCells: [MultiSelectCell] = habits.map { text in
+        let cell = MultiSelectCell()
+        cell.title.text = text
+        return cell
     }
 
     lazy var saveButton: UITableViewCell = {
@@ -53,9 +62,7 @@ class SleepViewController: UIViewController {
         view.backgroundColor = .systemGroupedBackground
         navigationController?.navigationBar.prefersLargeTitles = true
 
-        preventLargeTitleCollapsing()
         configUI()
-        setupSaveButton()
     }
 
     func configUI() {
@@ -75,33 +82,29 @@ class SleepViewController: UIViewController {
     }
 
     func configTextField() {
-        tabletCell.input.delegate = self
+        hoursCell.input.delegate = self
     }
 
-    func setupSaveButton() {
-        saveButton.onTap { [weak self] _ in
-            self?.saveButton.setSelected(true, animated: false)
-            let countOfTablets = Double(self!.tablets) ?? 0
-
-            if self?.tablets.range(of: "^\\d*(\\.\\d{0,2})?$", options: .regularExpression) == nil {
-                let alert = UIAlertController(title: "Check Tablet Count", message: "Please ensure your tablet count is valid.", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .cancel))
-                self?.present(alert, animated: true)
-                return
-            }
-
-            let sleepRecord = DailySleepRecord(date: Date.now, quality: self!.sleepQuality, tablets: countOfTablets)
-            DBManager.shared.insertOrUpdateSleep(record: sleepRecord)
-            self?.saveButton.setSelected(false, animated: false)
-
-            self?.contentView.weeklyView.update(today: sleepRecord)
-        }
+    func saveRecord() {
+//        saveButton.onTap { [weak self] _ in
+//            let countOfTablets = Double(self!.tablets) ?? 0
+//
+//            if self?.tablets.range(of: "^\\d*(\\.\\d{0,2})?$", options: .regularExpression) == nil {
+//                let alert = UIAlertController(title: "Check Tablet Count", message: "Please ensure your tablet count is valid.", preferredStyle: .alert)
+//                alert.addAction(UIAlertAction(title: "OK", style: .cancel))
+//                self?.present(alert, animated: true)
+//                return
+//            }
+//
+//            let sleepRecord = DailySleepRecord(date: Date.now, quality: self!.sleepQuality, tablets: countOfTablets)
+//            DBManager.shared.insertOrUpdateSleep(record: sleepRecord)
+//        }
     }
 }
 
 extension SleepViewController: SleepRaterCellDelegate {
     func sleepRaterCell(didChoose choice: SleepRaterCell.Choice) {
-        sleepQuality = choice.rawValue
+        quality = choice.rawValue
     }
 }
 
@@ -109,12 +112,14 @@ extension SleepViewController: UITextFieldDelegate {
 }
 
 extension SleepViewController: UITableViewDataSource, UITableViewDelegate {
-    func numberOfSections(in tableView: UITableView) -> Int { isTabletEnabled ? 3 : 2 }
+    func numberOfSections(in tableView: UITableView) -> Int { 4 }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
-        case 0, 1, 2:
+        case 0, 1, 3:
             return 1
+        case 2:
+            return 5
         default:
             return 0
         }
@@ -125,8 +130,10 @@ extension SleepViewController: UITableViewDataSource, UITableViewDelegate {
         case 0:
             return raterCell
         case 1:
-            return isTabletEnabled ? tabletCell : saveButton
+            return hoursCell
         case 2:
+            return habitCells[indexPath.row]
+        case 3:
             return saveButton
         default:
             return UITableViewCell()
@@ -137,8 +144,8 @@ extension SleepViewController: UITableViewDataSource, UITableViewDelegate {
         switch section {
         case 0:
             return "Sleep Quality"
-        case 1:
-            return isTabletEnabled ? "Supplement Taken" : nil
+        case 2:
+            return "Habit"
         default:
             return nil
         }
@@ -146,16 +153,21 @@ extension SleepViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
         switch section {
-        case 0:
-            return "Select your sleeping quality."
-        case 1:
-            return isTabletEnabled ? "Maxinmum is 200." : nil
         default:
             return nil
         }
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.section {
+        case 2:
+            habitCells[indexPath.row].isChecked.toggle()
+        case 3:
+            saveRecord()
+        default:
+            break
+        }
+
         tableView.deselectRow(at: indexPath, animated: false)
     }
 }
