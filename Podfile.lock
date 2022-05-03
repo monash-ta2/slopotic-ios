@@ -4,6 +4,7 @@ PODS:
     - GRDB.swift/standard (= 5.22.2)
   - GRDB.swift/standard (5.22.2)
   - MKRingProgressView (2.3.0)
+  - ProgressHUD (13.6)
   - Smile (2.0.0)
   - SnapKit (5.0.1)
 
@@ -11,6 +12,7 @@ DEPENDENCIES:
   - GestureRecognizerClosures (~> 5)
   - GRDB.swift
   - MKRingProgressView
+  - ProgressHUD
   - Smile
   - SnapKit (~> 5.0.0)
 
@@ -19,6 +21,7 @@ SPEC REPOS:
     - GestureRecognizerClosures
     - GRDB.swift
     - MKRingProgressView
+    - ProgressHUD
     - Smile
     - SnapKit
 
@@ -26,9 +29,10 @@ SPEC CHECKSUMS:
   GestureRecognizerClosures: 0dcafb45e669e7a775c840383e54b3d16983037b
   GRDB.swift: aa11d3b2fc6243ce8b5573d7bfa75a89093d1ee0
   MKRingProgressView: f534209b9a1edc0beb2ea613e6b953ea2195b565
+  ProgressHUD: 4bdaa0d2ddf676b23324b199f9facffb5c3a1620
   Smile: 21ff6c48e06ecfcee605cca32aedd74d5810e34a
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
 
-PODFILE CHECKSUM: 5db1f288e6842b45548e3db096bf7bdbb278953f
+PODFILE CHECKSUM: d3769780eb1bca0fd28600875b0f5db8c240d3d5
 
 COCOAPODS: 1.11.3

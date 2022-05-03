@@ -1,5 +1,5 @@
 //
-//  TabletTakenCell.swift
+//  InputCell.swift
 //  Slopotic
 //
 //  Created by Weiyi Kong on 7/4/2022.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TabletTakenCell: UITableViewCell {
+class InputCell: UITableViewCell {
     lazy var title = UILabel()
     lazy var input = UITextField()
 
@@ -30,8 +30,10 @@ class TabletTakenCell: UITableViewCell {
     }
 
     func setup() {
-        title.text = "Count of Tablet(s)"
-        title.font = .preferredFont(forTextStyle: .body, compatibleWith: nil)
+        title.text = ""
+        title.font = .systemFont(ofSize: 17, weight: .regular)
+        title.setContentHuggingPriority(.required, for: .horizontal)
+        title.setContentCompressionResistancePriority(.required, for: .horizontal)
         contentView.addSubview(title)
         
         input.placeholder = "0"
@@ -47,7 +49,6 @@ class TabletTakenCell: UITableViewCell {
         title.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.left.equalToSuperview().offset(16)
-            make.width.equalTo(title.intrinsicContentSize.width)
         }
         input.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
