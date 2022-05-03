@@ -8,16 +8,15 @@
 
 import UIKit
 import SnapKit
+import ProgressHUD
 
 class SleepViewController: UIViewController {
     lazy var contentView = SleepView()
 
-    lazy var raterCell: SleepRaterCell = {
-        let rater = SleepRaterCell()
-        rater.delegate = self
-        return rater
-    }()
-    lazy var quality = SleepRaterCell.Choice.good.rawValue
+    lazy var raterCell = SleepRaterCell()
+    var quality: Int {
+        raterCell.choice.rawValue
+    }
 
     lazy var hoursCell: InputCell = {
         let cell = InputCell()
@@ -25,15 +24,13 @@ class SleepViewController: UIViewController {
         return cell
     }()
     var hours: String {
-        get {
-            hoursCell.input.text ?? "0"
-        }
+        hoursCell.input.text ?? ""
     }
 
-    lazy var habits = ["Read a Book", "Watch TV", "Adjust Heat", "Use Social Media", "Take a Warm Bath"]
-    lazy var habitCells: [MultiSelectCell] = habits.map { text in
+    lazy var habits: [SleepHabit] = [.book, .tv, .heat, .sns, .bath]
+    lazy var habitCells: [MultiSelectCell] = habits.map { habit in
         let cell = MultiSelectCell()
-        cell.title.text = text
+        cell.title.text = habit.rawValue
         return cell
     }
 
@@ -81,30 +78,24 @@ class SleepViewController: UIViewController {
         contentView.tableView.dataSource = self
     }
 
-    func configTextField() {
-        hoursCell.input.delegate = self
-    }
-
     func saveRecord() {
-//        saveButton.onTap { [weak self] _ in
-//            let countOfTablets = Double(self!.tablets) ?? 0
-//
-//            if self?.tablets.range(of: "^\\d*(\\.\\d{0,2})?$", options: .regularExpression) == nil {
-//                let alert = UIAlertController(title: "Check Tablet Count", message: "Please ensure your tablet count is valid.", preferredStyle: .alert)
-//                alert.addAction(UIAlertAction(title: "OK", style: .cancel))
-//                self?.present(alert, animated: true)
-//                return
-//            }
-//
-//            let sleepRecord = DailySleepRecord(date: Date.now, quality: self!.sleepQuality, tablets: countOfTablets)
-//            DBManager.shared.insertOrUpdateSleep(record: sleepRecord)
-//        }
-    }
-}
+        let calendar = Calendar(identifier: .gregorian)
+        let dateComponents = calendar.dateComponents([.year, .month, .day], from: .now)
+        let enabledHabits = habitCells.filter { $0.isChecked }.map { $0.itemName }
 
-extension SleepViewController: SleepRaterCellDelegate {
-    func sleepRaterCell(didChoose choice: SleepRaterCell.Choice) {
-        quality = choice.rawValue
+        if hours.isEmpty { hoursCell.input.text = "0" }
+
+        guard let _ = hours.range(of: "^\\d*(\\.\\d{0,1})?$", options: .regularExpression),
+              let countOfHours = Double(hours), countOfHours <= 24 else {
+            let alert = UIAlertController(title: "Invalid Sleep Hours", message: nil, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .cancel))
+            present(alert, animated: true)
+            return
+        }
+
+        let sleepRecord = SleepRecord(date: dateComponents, quality: quality, hours: countOfHours, habits: enabledHabits)
+        DBManager.shared.todaySleep(record: sleepRecord)
+        ProgressHUD.showSucceed("Saved", interaction: true)
     }
 }
 

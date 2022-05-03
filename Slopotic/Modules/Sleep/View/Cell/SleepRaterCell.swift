@@ -28,6 +28,20 @@ class SleepRaterCell: UITableViewCell {
     lazy var badChoice = setupChoice(backgroundColor: unselectedColor, emoji: "persevere", text: "Bad", position: .left)
     lazy var goodChoice = setupChoice(backgroundColor: goodColor, emoji: "sunglasses", text: "Good", position: .right)
 
+    lazy var choice = Choice.good {
+        didSet {
+            switch choice {
+            case .bad:
+                self.badChoice.backgroundColor = self.badColor
+                self.goodChoice.backgroundColor = self.unselectedColor
+            case .good:
+                self.goodChoice.backgroundColor = self.goodColor
+                self.badChoice.backgroundColor = self.unselectedColor
+            }
+            self.delegate?.sleepRaterCell(didChoose: choice)
+        }
+    }
+
     var delegate: SleepRaterCellDelegate?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -41,17 +55,13 @@ class SleepRaterCell: UITableViewCell {
     }
 
     func setup() {
-        badChoice.onTap { _ in
-            self.badChoice.backgroundColor = self.badColor
-            self.goodChoice.backgroundColor = self.unselectedColor
-            self.delegate?.sleepRaterCell(didChoose: .bad)
+        badChoice.onTap { [weak self] _ in
+            self?.choice = .bad
         }
         contentView.addSubview(badChoice)
 
-        goodChoice.onTap { _ in
-            self.goodChoice.backgroundColor = self.goodColor
-            self.badChoice.backgroundColor = self.unselectedColor
-            self.delegate?.sleepRaterCell(didChoose: .good)
+        goodChoice.onTap { [weak self] _ in
+            self?.choice = .good
         }
         contentView.addSubview(goodChoice)
     }

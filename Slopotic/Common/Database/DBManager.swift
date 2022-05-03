@@ -14,26 +14,14 @@ class DBManager {
     let dbPath = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!)/db.sqlite3"
     lazy var dbQueue = try! DatabaseQueue(path: self.dbPath)
 
-    private lazy var gmtFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MM/dd/yyyy"
-        formatter.timeZone = .init(secondsFromGMT: 0)
-        return formatter
-    }()
-
-    private lazy var localFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MM/dd/yyyy"
-        return formatter
-    }()
-
-    func setupSleep() {
+    func setupSleepRecord() {
         do {
             try dbQueue.write({ db in
                 try db.create(table: "sleep") { tb in
                     tb.column("date", .date).primaryKey()
                     tb.column("quality", .integer).notNull()
-                    tb.column("tablets", .double)
+                    tb.column("hours", .double)
+                    tb.column("habit", .text)
                 }
             })
         } catch {
@@ -41,72 +29,60 @@ class DBManager {
         }
     }
 
-    private func removeDateTimeAndTimezone(original date: Date) -> Date {
-        return gmtFormatter.date(from: date.formatted(date: .numeric, time: .omitted))!
+    func todaySleep(record model: SleepRecord) {
+        if let _ = selectSleep(date: model.date) {
+            updateSleep(record: model)
+        } else {
+            insertSleep(record: model)
+        }
     }
 
-    private func recoverDateTimeAndTimezone(converted date: Date) -> Date {
-        return localFormatter.date(from: gmtFormatter.string(from: date))!
-    }
-
-    func insertOrUpdateSleep(record model: DailySleepRecord) {
-        var convertedModel = model
-        convertedModel.date = removeDateTimeAndTimezone(original: model.date)
+    func insertSleep(record model: SleepRecord) {
         do {
             try dbQueue.write({ db in
-                if try convertedModel.exists(db) {
-                    try convertedModel.update(db)
-                } else {
-                    try convertedModel.insert(db)
-                }
+                try db.execute(
+                    sql: "INSERT INTO sleep (date, quality, hours, habit) VALUES (?, ?, ?, ?)",
+                    arguments: [model.dbDate, model.quality, model.hours, model.dbHabit]
+                )
             })
         } catch {
             print(error)
         }
     }
 
-    func insertSleep(record model: DailySleepRecord) {
-        var convertedModel = model
-        convertedModel.date = removeDateTimeAndTimezone(original: model.date)
+    func updateSleep(record model: SleepRecord) {
         do {
             try dbQueue.write({ db in
-                try convertedModel.insert(db)
+                try db.execute(
+                    sql: "UPDATE sleep SET quality = ?, hours = ?, habit = ? WHERE date = ?",
+                    arguments: [model.quality, model.hours, model.dbHabit, model.dbDate]
+                )
             })
         } catch {
             print(error)
         }
     }
 
-    func updateSleep(record model: DailySleepRecord) {
-        var convertedModel = model
-        convertedModel.date = removeDateTimeAndTimezone(original: model.date)
+    func deleteSleep(date: DateComponents) {
         do {
             try dbQueue.write({ db in
-                try convertedModel.update(db)
+                try db.execute(
+                    sql: "DELETE FROM sleep WHERE date = ?",
+                    arguments: [DatabaseDateComponents(date, format: .YMD)]
+                )
             })
         } catch {
             print(error)
         }
     }
 
-    func deleteSleep(record model: DailySleepRecord) {
-        var convertedModel = model
-        convertedModel.date = removeDateTimeAndTimezone(original: model.date)
-        do {
-            try dbQueue.write({ db in
-                try convertedModel.delete(db)
-            })
-        } catch {
-            print(error)
-        }
-    }
-
-    func selectSleep(date: Date) -> DailySleepRecord? {
-        var record: DailySleepRecord? = nil
+    func selectSleep(date: DateComponents) -> SleepRecord? {
+        var record: SleepRecord? = nil
         do {
             try dbQueue.read({ db in
-                record = try DailySleepRecord.fetchOne(db, key: removeDateTimeAndTimezone(original: date))
-                record?.date = recoverDateTimeAndTimezone(converted: date)
+                if let row = try Row.fetchOne(db, sql: "SELECT * FROM sleep WHERE date = ?", arguments: [DatabaseDateComponents(date, format: .YMD)]) {
+                    record = SleepRecord(date: row["date"], quality: row["quality"], hours: row["hours"], habit: row["habit"])
+                }
             })
         } catch {
             print(error)

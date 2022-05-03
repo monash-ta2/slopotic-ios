@@ -10,5 +10,6 @@ target 'Slopotic' do
   pod 'Smile'
   pod 'GestureRecognizerClosures', '~> 5'
   pod 'GRDB.swift'
+  pod 'ProgressHUD'
 
 end
