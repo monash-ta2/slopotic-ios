@@ -8,8 +8,15 @@
 
 import UIKit
 
-struct PlaylistModel {
-    var image: UIImage
+struct Playlist: Codable {
+    static let baseURL = URL(string: "https://data.slopotic.tech/")!
+
     var title: String
-    var url: URL
+    var image: String
+    var music: [Music]
+}
+
+struct Music: Codable {
+    var title: String
+    var url: String
 }

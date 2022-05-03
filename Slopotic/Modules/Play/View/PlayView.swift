@@ -25,6 +25,7 @@ class PlayView: UIView {
     }
 
     func setup() {
+        collectionView.alwaysBounceVertical = true
         addSubview(collectionView)
     }
     
