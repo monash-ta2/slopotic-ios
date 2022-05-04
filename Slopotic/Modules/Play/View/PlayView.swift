@@ -12,6 +12,8 @@ import SnapKit
 class PlayView: UIView {
     lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
 
+    lazy var playerView = PlayerView()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -27,11 +29,19 @@ class PlayView: UIView {
     func setup() {
         collectionView.alwaysBounceVertical = true
         addSubview(collectionView)
+
+        addSubview(playerView)
     }
     
     func layout() {
         collectionView.snp.makeConstraints { make in
-            make.size.equalToSuperview()
+            make.top.left.right.equalToSuperview()
+            make.bottom.equalTo(playerView.snp.top)
+        }
+
+        playerView.snp.makeConstraints { make in
+            make.left.right.bottom.equalToSuperview()
+            make.height.equalTo(64)
         }
     }
 }
