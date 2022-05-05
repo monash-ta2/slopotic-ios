@@ -8,6 +8,7 @@
 
 import UIKit
 import SnapKit
+import Kingfisher
 
 class PlayCardView: UICollectionViewCell {
     let cardHeight: CGFloat = 112
@@ -59,8 +60,9 @@ class PlayCardView: UICollectionViewCell {
         }
     }
 
-    func update(_ model: PlaylistModel) {
+    func update(_ model: Playlist) {
         title.text = model.title
-        image.image = model.image
+        let imageURL = Playlist.baseURL.appendingPathComponent(model.image)
+        image.kf.setImage(with: imageURL)
     }
 }
