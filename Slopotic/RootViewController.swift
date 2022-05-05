@@ -35,11 +35,19 @@ class RootViewController: UITabBarController {
         mineVC.tabBarItem.image = UIImage(systemName: "person.crop.circle.fill")
 
         viewControllers = [
-            UINavigationController(rootViewController: homeVC),
+//            UINavigationController(rootViewController: homeVC),
             UINavigationController(rootViewController: playVC),
-            UINavigationController(rootViewController: sleepVC),
-            UINavigationController(rootViewController: mineVC)
+            UINavigationController(rootViewController: sleepVC)
+//            UINavigationController(rootViewController: mineVC)
         ]
+
+        initialSetup()
     }
 
+    func initialSetup() {
+        if !UserDefaults.standard.bool(forKey: "didSetup") {
+            DBManager.shared.setupSleepRecord()
+            UserDefaults.standard.set(true, forKey: "didSetup")
+        }
+    }
 }

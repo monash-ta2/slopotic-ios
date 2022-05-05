@@ -14,13 +14,5 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
 
         view.backgroundColor = .systemBackground
-        initialSetup()
-    }
-
-    func initialSetup() {
-        if !UserDefaults.standard.bool(forKey: "didSetup") {
-            DBManager.shared.setupSleepRecord()
-            UserDefaults.standard.set(true, forKey: "didSetup")
-        }
     }
 }
