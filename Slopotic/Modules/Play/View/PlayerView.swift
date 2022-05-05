@@ -69,6 +69,7 @@ class PlayerView: UIView {
         title.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.left.equalTo(artwork.snp.right).offset(16)
+            make.right.lessThanOrEqualTo(playButton.snp.left).offset(-16)
         }
 
         playButton.snp.makeConstraints { make in
