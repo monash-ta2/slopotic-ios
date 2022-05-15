@@ -12,5 +12,6 @@ target 'Slopotic' do
   pod 'GRDB.swift'
   pod 'ProgressHUD'
   pod 'Alamofire'
+  pod 'AAInfographics', :git => 'https://github.com/AAChartModel/AAChartKit-Swift.git'
 
 end
