@@ -32,7 +32,7 @@ class RootViewController: UITabBarController {
         reportVC.tabBarItem.image = UIImage(systemName: "chart.bar.doc.horizontal.fill")
 
         viewControllers = [
-//            UINavigationController(rootViewController: homeVC),
+            UINavigationController(rootViewController: homeVC),
             UINavigationController(rootViewController: playVC),
             UINavigationController(rootViewController: sleepVC),
             UINavigationController(rootViewController: reportVC)
