@@ -93,6 +93,12 @@ class PlayViewController: UIViewController {
         contentView.collectionView.dataSource = self
         contentView.collectionView.register(PlayCardView.self, forCellWithReuseIdentifier: "playCard")
     }
+
+    func recordPlay() {
+        let calendar = Calendar(identifier: .gregorian)
+        let dateComponents = calendar.dateComponents([.year, .month, .day], from: .now)
+        DBManager.shared.todayPlay(date: dateComponents)
+    }
 }
 
 extension PlayViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -118,5 +124,7 @@ extension PlayViewController: UICollectionViewDataSource, UICollectionViewDelega
         currentPlaylistIndex = indexPath.row
         currentPlaylist = data[indexPath.row].music.shuffled()
         player.play()
+
+        recordPlay()
     }
 }

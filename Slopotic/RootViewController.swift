@@ -12,10 +12,7 @@ class RootViewController: UITabBarController {
     let homeVC = HomeViewController()
     let playVC = PlayViewController()
     let sleepVC = SleepViewController()
-    let mineVC: MineTableViewController = {
-        let storyboard = UIStoryboard(name: "MineTableViewController", bundle: nil)
-        return storyboard.instantiateViewController(withIdentifier: "MineTableViewController") as! MineTableViewController
-    }()
+    let reportVC = ReportViewController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,14 +28,14 @@ class RootViewController: UITabBarController {
         sleepVC.tabBarItem.title = "Sleep"
         sleepVC.tabBarItem.image = UIImage(systemName: "powersleep")
 
-        mineVC.tabBarItem.title = "Me"
-        mineVC.tabBarItem.image = UIImage(systemName: "person.crop.circle.fill")
+        reportVC.tabBarItem.title = "Report"
+        reportVC.tabBarItem.image = UIImage(systemName: "chart.bar.doc.horizontal.fill")
 
         viewControllers = [
 //            UINavigationController(rootViewController: homeVC),
             UINavigationController(rootViewController: playVC),
-            UINavigationController(rootViewController: sleepVC)
-//            UINavigationController(rootViewController: mineVC)
+            UINavigationController(rootViewController: sleepVC),
+            UINavigationController(rootViewController: reportVC)
         ]
 
         initialSetup()
@@ -47,6 +44,7 @@ class RootViewController: UITabBarController {
     func initialSetup() {
         if !UserDefaults.standard.bool(forKey: "didSetup") {
             DBManager.shared.setupSleepRecord()
+            DBManager.shared.setupPlayRecord()
             UserDefaults.standard.set(true, forKey: "didSetup")
         }
     }

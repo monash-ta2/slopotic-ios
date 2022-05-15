@@ -14,6 +14,8 @@ class DBManager {
     let dbPath = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!)/db.sqlite3"
     lazy var dbQueue = try! DatabaseQueue(path: self.dbPath)
 
+    var delegates: [DBDelegate] = []
+
     func setupSleepRecord() {
         do {
             try dbQueue.write({ db in
@@ -26,6 +28,24 @@ class DBManager {
             })
         } catch {
             print(error)
+        }
+    }
+
+    func setupPlayRecord() {
+        do {
+            try dbQueue.write({ db in
+                try db.create(table: "play") { tb in
+                    tb.column("date", .date).primaryKey()
+                }
+            })
+        } catch {
+            print(error)
+        }
+    }
+
+    private func notifyUpdates() {
+        for delegate in delegates {
+            delegate.dbUpdate()
         }
     }
 
@@ -45,6 +65,7 @@ class DBManager {
                     arguments: [model.dbDate, model.quality, model.hours, model.dbHabit]
                 )
             })
+            notifyUpdates()
         } catch {
             print(error)
         }
@@ -58,6 +79,7 @@ class DBManager {
                     arguments: [model.quality, model.hours, model.dbHabit, model.dbDate]
                 )
             })
+            notifyUpdates()
         } catch {
             print(error)
         }
@@ -71,6 +93,7 @@ class DBManager {
                     arguments: [DatabaseDateComponents(date, format: .YMD)]
                 )
             })
+            notifyUpdates()
         } catch {
             print(error)
         }
@@ -90,11 +113,66 @@ class DBManager {
         return record
     }
 
-//    func selectRecentSleep() -> [DailySleepRecord?] {
-//        do {
-//            try dbQueue.read({ db in
-//                return DailySleepRecord.fetchAll(db, keys: [])
-//            })
-//        }
-//    }
+    func selectLastMonthSleep() -> [SleepRecord] {
+        var records: [SleepRecord] = []
+        do {
+            try dbQueue.read({ db in
+                let rows = try Row.fetchAll(db, sql: "SELECT * FROM sleep WHERE date BETWEEN datetime('now', '-30 days') AND datetime('now', 'localtime')")
+                records = rows.map({ SleepRecord(date: $0["date"], quality: $0["quality"], hours: $0["hours"], habit: $0["habit"]) })
+            })
+        } catch {
+            print(error)
+        }
+        return records
+    }
+
+    func todayPlay(date: DateComponents) {
+        if !selectPlay(date: date) {
+            insertPlay(date: date)
+        }
+    }
+
+    func insertPlay(date: DateComponents) {
+        do {
+            try dbQueue.write({ db in
+                try db.execute(
+                    sql: "INSERT INTO play (date) VALUES (?)",
+                    arguments: [DatabaseDateComponents(date, format: .YMD)]
+                )
+            })
+            notifyUpdates()
+        } catch {
+            print(error)
+        }
+    }
+
+    func selectPlay(date: DateComponents) -> Bool {
+        var result = false
+        do {
+            try dbQueue.read({ db in
+                if let _ = try Row.fetchOne(db, sql: "SELECT * FROM play WHERE date = ?", arguments: [DatabaseDateComponents(date, format: .YMD)]) {
+                    result = true
+                }
+            })
+        } catch {
+            print(error)
+        }
+        return result
+    }
+
+    func selectLastMonthPlay() -> [DateComponents] {
+        var records = [DateComponents]()
+        do {
+            try dbQueue.read({ db in
+                let rows = try Row.fetchAll(db, sql: "SELECT * FROM play WHERE date BETWEEN datetime('now', '-30 days') AND datetime('now', 'localtime')")
+                records = rows.compactMap({ row in
+                    let dbDate: DatabaseDateComponents = row["date"]
+                    return dbDate.dateComponents
+                })
+            })
+        } catch {
+            print(error)
+        }
+        return records
+    }
 }
