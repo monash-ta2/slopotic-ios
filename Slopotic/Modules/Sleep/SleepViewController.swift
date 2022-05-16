@@ -55,7 +55,7 @@ class SleepViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        title = "Sleep"
+        title = "Record"
         view.backgroundColor = .systemGroupedBackground
         navigationController?.navigationBar.prefersLargeTitles = true
 
@@ -135,8 +135,10 @@ extension SleepViewController: UITableViewDataSource, UITableViewDelegate {
         switch section {
         case 0:
             return "Sleep Quality"
+        case 1:
+            return "Sleep duration"
         case 2:
-            return "Habit"
+            return "Sleep Habit"
         default:
             return nil
         }
@@ -144,6 +146,12 @@ extension SleepViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
         switch section {
+        case 0:
+            return "Select Good if you get enough rest last night."
+        case 1:
+            return "Enter your sleeping hours."
+        case 2:
+            return "Choose the sleeping strategies you tried last night."
         default:
             return nil
         }
