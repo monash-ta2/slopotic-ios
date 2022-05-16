@@ -25,7 +25,7 @@ class RootViewController: UITabBarController {
         playVC.tabBarItem.title = "Play"
         playVC.tabBarItem.image = UIImage(systemName: "play.fill")
 
-        sleepVC.tabBarItem.title = "Sleep"
+        sleepVC.tabBarItem.title = "Record"
         sleepVC.tabBarItem.image = UIImage(systemName: "powersleep")
 
         reportVC.tabBarItem.title = "Report"

@@ -11,7 +11,6 @@ import AAInfographics
 import GRDB
 
 class ReportViewController: UIViewController {
-
     lazy var contentView = SleepView()
 
     lazy var habitCell = ReportCell()
@@ -95,7 +94,13 @@ class ReportViewController: UIViewController {
             ])
 
         var averageHours = [String: Double]()
-        for habit in topHabits {
+        let habits = ["Play Music",
+                      SleepHabit.tv.rawValue,
+                      SleepHabit.sns.rawValue,
+                      SleepHabit.bath.rawValue,
+                      SleepHabit.book.rawValue,
+                      SleepHabit.heat.rawValue]
+        for habit in habits {
             var dayCount: Double = 0
             var totalHours: Double = 0
             if habit == "Play Music" {
@@ -165,9 +170,20 @@ extension ReportViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0:
-            return "Habit"
+            return "Habits and Sleep Quality"
         case 1:
-            return "Sleeping Hours"
+            return "Habits and Sleeping Hours"
+        default:
+            return nil
+        }
+    }
+
+    func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        switch section {
+        case 0:
+            return "Here counts the number of dates with good sleeping quality in latest 30 days. You can find out how Sleep Music and other Sleep Habits influence your sleeping quality."
+        case 1:
+            return "Here calculates the average sleeping hours for each habit in latest 30 days."
         default:
             return nil
         }

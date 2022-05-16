@@ -27,6 +27,8 @@ class ReportCell: UITableViewCell {
     func setup() {
         chart.scrollEnabled = false
         contentView.addSubview(chart)
+
+        selectionStyle = .none
     }
 
     func layout() {
