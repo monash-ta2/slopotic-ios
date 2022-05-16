@@ -44,6 +44,7 @@ class InfoCardView: UIView {
         image.image = UIImage(named: "info")
         image.backgroundColor = UIColor(red: 0.98, green: 1.00, blue: 1.00, alpha: 1.00)
         image.contentMode = .scaleAspectFill
+        image.isUserInteractionEnabled = true
 
         button.setTitle("Details >", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 20)
